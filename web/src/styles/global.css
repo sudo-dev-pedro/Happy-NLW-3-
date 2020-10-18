@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
+
+:root {
+    --color-background-one: #FFF;
+    --color-background-two: #EBF2EB;
+    --color-enter-app: #FFD666;
+    --color-enter-app-hover: #96FEFF;
+    --color-create-orphanage: #15C3D6;
+    --color-create-orphanage-hover: #17D6EB;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+body {
+    color: var(--color-background-one);
+    background: var(--color-background-two);
+}
+
+body,
+input, 
+button,
+textarea {
+    font: 600 18px Nunito, sans-serif; 
+}
