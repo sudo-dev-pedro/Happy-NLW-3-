@@ -10,7 +10,7 @@
 
 Projeto desenvolvido durante a Next Level Week 3 oferecido pela Rocketseat
 
-## 🚀 Tecnologias
+## Tecnologias
 
 Esse projeto foi desenvolvido usando:
 
