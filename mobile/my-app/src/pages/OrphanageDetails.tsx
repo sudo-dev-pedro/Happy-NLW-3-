@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Image, View, ScrollView, Text, StyleSheet, Dimensions, Linking } from 'react-native';
+import { Image, View, ScrollView, Text, StyleSheet, Dimensions, TouchableOpacity, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Feather, FontAwesome } from '@expo/vector-icons';
-import { RectButton, TouchableOpacity } from 'react-native-gesture-handler';
+import { RectButton } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
-import api from '../services/api';
 
 import mapMarker from '../images/map-marker.png';
+import api from '../services/api';
+
+interface OrphanageDetailsRouteParams {
+  id: number;
+};
 
 interface Orphanage {
   id: number;
@@ -21,61 +25,57 @@ interface Orphanage {
     id: number;
     url: string;
   }>;
-};
-
-interface OrphanageDetailsRouteParams {
-  id: number;
-};
+}
 
 export default function OrphanageDetails() {
-  const [orphanage, setOrphanage] = useState<Orphanage>();
   const route = useRoute();
+  const [orphanage, setOrphanage] = useState<Orphanage>();
+
   const params = route.params as OrphanageDetailsRouteParams;
 
   useEffect(() => {
     api.get(`orphanages/${params.id}`).then(response => {
       setOrphanage(response.data);
-      console.log(response.data);
-    })
+    });
   }, [params.id]); //Dependencia do meu useEffect
 
   if (!orphanage) {
-    <View style={styles.container}>
-      <Text style={styles.description}>
-        Carregando...
-      </Text>
-    </View>
+    return (
+      <View style={styles.container}>
+        <Text style={styles.description}>
+          Carregando...
+        </Text>
+      </View>
+    );
   }
 
   function openGoogleMapsRoute() {
-    Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${orphanage?.latitude},${orphanage?.longitude}`)
+    Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${orphanage?.latitude},${orphanage?.longitude}`);
   }
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.imagesContainer}>
         <ScrollView horizontal pagingEnabled>
-          {orphanage?.images.map(image => {
-            return (
-              <Image
-                key={image.id}
-                style={styles.image}
-                source={{ uri: image.url }}
-              />
-            )
+          {orphanage.images.map(image => {
+            <Image
+              key={image.id}
+              style={styles.image}
+              source={{ uri: image.url }}
+            />
           })}
         </ScrollView>
       </View>
 
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}> {orphanage?.nome} </Text>
-        <Text style={styles.description}> {orphanage?.sobre} </Text>
+        <Text style={styles.title}> {orphanage.nome} </Text>
+        <Text style={styles.description}> {orphanage.sobre} </Text>
       
         <View style={styles.mapContainer}>
           <MapView 
             initialRegion={{
-              latitude: -27.000,
-              longitude: -49.000,
+              latitude: orphanage.latitude,
+              longitude: orphanage.longitude,
               latitudeDelta: 0.008,
               longitudeDelta: 0.008,
             }} 
@@ -88,8 +88,8 @@ export default function OrphanageDetails() {
             <Marker 
               icon={mapMarker}
               coordinate={{ 
-                latitude: -27.000,
-                longitude: -49.000,
+                latitude: orphanage.latitude,
+                longitude: orphanage.longitude,
               }}
             />
           </MapView>
